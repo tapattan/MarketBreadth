@@ -1,5 +1,5 @@
 streamlit
+websockets
 pandas
 plotly
 numpy
-websockets
