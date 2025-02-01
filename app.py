@@ -1,8 +1,6 @@
 from set_api import get_member_of_index
 from set_api import indexType
 
-from TvDatafeed import TvDatafeed
-from TvDatafeed import Interval
 from util import min_max_scale
 from util import adjust_date_based_on_day_v3
 import time
@@ -13,6 +11,19 @@ import matplotlib.pyplot as plt
 import streamlit as st
 import datetime
  
+#################################
+#################################
+
+# ส่วน config #
+__DEPLOY__ = True  # ถ้าจะเอาขึ้นไปบน streamlit ให้ใช้ True 
+
+#################################
+#################################
+
+if(not __DEPLOY__):
+  from TvDatafeed import TvDatafeed
+  from TvDatafeed import Interval
+
 def loaddata():
     obj = TvDatafeed()
     df = get_member_of_index(indexType.set50)
@@ -149,15 +160,16 @@ def main():
     if selected_date:
        st.session_state.selected_date = selected_date.strftime('%Y-%m-%d')
        #print(st.session_state.selected_date)
-    
-    if col2.button("load new data"):
-        with st.spinner("⏳ กำลังดำเนินการ... โปรดรอสักครู่"):
-          result = process_loaddata()
 
-        if result:
-           col2.success('load ข้อมูลใหม่สำเร็จ')
-        else:
-           col2.error('load ข้อมูลใหม่ไม่สำเร็จ') 
+    if(not __DEPLOY__): 
+        if col2.button("load new data"):
+            with st.spinner("⏳ กำลังดำเนินการ... โปรดรอสักครู่"):
+                result = process_loaddata()
+
+            if result:
+                col2.success('load ข้อมูลใหม่สำเร็จ')
+            else:
+                col2.error('load ข้อมูลใหม่ไม่สำเร็จ') 
 
 
 if __name__ == "__main__":
